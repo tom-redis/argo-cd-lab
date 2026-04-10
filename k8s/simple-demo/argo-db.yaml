@@ -1,0 +1,11 @@
+apiVersion: app.redislabs.com/v1alpha1
+kind: RedisEnterpriseDatabase
+metadata:
+  name: argo-db
+spec:
+  redisEnterpriseCluster:
+    name: argo-cluster
+  memorySize: 1GB
+  databasePort: 13000
+  replication: false
+  evictionPolicy: "volatile-lru"

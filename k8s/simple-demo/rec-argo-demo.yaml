@@ -1,0 +1,14 @@
+apiVersion: app.redislabs.com/v1
+kind: RedisEnterpriseCluster
+metadata:
+  name: argo-cluster
+spec:
+  nodes: 3
+  username: admin@rl.org
+  redisEnterpriseNodeResources:
+    limits:
+      cpu: "4"
+      memory: 4Gi
+    requests:
+      cpu: "4"
+      memory: 4Gi

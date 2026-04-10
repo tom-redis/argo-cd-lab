@@ -123,7 +123,8 @@ Depending on how PS Portal exposes forwarded ports, you can usually:
 - Use the IDE/terminal “open port 8080” feature, or
 - Open a browser from your local machine to the lab’s forwarded URL (if provided by the lab UI).
 
-In RSOT labs, HTTP(S) access goes through the `*.labs.ps-redis.com` domain. If your instance name is `instanceName` and PS Portal is exposing port 8080 for you, the URL will look like:
+
+In RSOT labs, HTTP(S) access goes through the `*.labs.ps-redis.com` domain. If your instance name is `instanceName` and **the lab template exposes port 8080**, a URL like the following may work:
 
 ```text
 https://8080-dot-<instanceName>.labs.ps-redis.com
@@ -131,7 +132,9 @@ https://8080-dot-<instanceName>.labs.ps-redis.com
 
 where &lt;instanceName&gt; is the unique 6-character string in the URL, "rl-s-labs-*xxxxxx*.ps-redis.com"
 
-Log in with:
+If that URL returns **502 Bad Gateway**, it usually means PS Portal is **not** forwarding that port for this lab template. In that case, use the CLI flow in §6.2 (port-forward + `argocd login localhost:8080`) instead of trying to reach Argo CD from your local browser.
+
+When (if) the browser URL does work, you can log in with:
 
 - **Username:** `admin`  
 - **Password:** value from `ARGOCD_ADMIN_PASSWORD`
@@ -157,11 +160,25 @@ You can now use `argocd app ...` and other CLI commands.
 
 For the simplest use case, you can reference the in-cluster API server directly in your `Application` manifests (`server: https://kubernetes.default.svc`) without any extra steps.
 
-If you want to register the current cluster explicitly:
+If you want to register the current cluster explicitly, first copy the kubeconfig that `sudo kubectl` uses into your own home directory (so `argocd` can see the same context):
 
 ```bash
-CURRENT_CONTEXT="$(k config current-context)"
+# Create kube dir for labuser
+mkdir -p ~/.kube
 
+# Copy root's kubeconfig into your home
+sudo cp /root/.kube/config ~/.kube/config
+
+# Fix ownership and permissions
+sudo chown labuser:labuser ~/.kube/config
+chmod 600 ~/.kube/config
+```
+
+Now use **plain** `kubectl` (no sudo) to confirm the context and add the cluster:
+
+```bash
+kubectl config current-context    # should print kind-kind (or similar)
+CURRENT_CONTEXT="$(kubectl config current-context)"
 argocd cluster add "$CURRENT_CONTEXT"
 ```
 

@@ -6,6 +6,6 @@ spec:
   redisEnterpriseCluster:
     name: argo-cluster
   memorySize: 1GB
-  databasePort: 13000
+  databasePort: 12000
   replication: false
   evictionPolicy: "volatile-lru"

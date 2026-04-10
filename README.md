@@ -108,13 +108,15 @@ export ARGOCD_ADMIN_PASSWORD="$(k -n argocd get secret argocd-initial-admin-secr
 
 ## 6. Expose the Argo CD API server (port-forward)
 
-In the RSOT for K8s lab, the simplest way to access Argo CD is port-forwarding from the lab host:
+In the RSOT for K8s lab, the simplest way to access Argo CD is port-forwarding from the lab host.
+
+Right click the browser tab for the terminal; click **Duplicate** to open a separate dedicated terminal.
 
 ```bash
 k -n argocd port-forward svc/argocd-server 8080:80
 ```
 
-Leave this running in a dedicated terminal.
+Leave this running in the dedicated terminal.
 
 ### 6.1. Web UI access
 
@@ -123,6 +125,7 @@ Depending on how PS Portal exposes forwarded ports, you can usually:
 - Use the IDE/terminal “open port 8080” feature, or
 - Open a browser from your local machine to the lab’s forwarded URL (if provided by the lab UI).
 
+**Note:** This feature is *NOT* currently supported for this lab. You'll be using the steps in §6.2 to use the Agro CLI.
 
 In RSOT labs, HTTP(S) access goes through the `*.labs.ps-redis.com` domain. If your instance name is `instanceName` and **the lab template exposes port 8080**, a URL like the following may work:
 
@@ -206,7 +209,7 @@ spec:
   source:
     repoURL: https://github.com/tom-redis/argo-cd-lab.git
     targetRevision: HEAD
-    path: k8s/argo-demo   # adjust to the actual path in your repo
+    path: k8s/simple-demo   # adjust to the actual path in your repo
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd      # same namespace as Argo CD for this lab

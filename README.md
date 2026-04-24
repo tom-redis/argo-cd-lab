@@ -65,7 +65,7 @@ All should be in `Running` and `READY` status before continuing.
 
 ---
 
-## 4. (Optional) Install the Argo CD CLI in the lab
+## 4. Install the Argo CD CLI in the lab
 
 Installing the CLI on the lab host makes it easier to work with Argo CD.
 
@@ -194,7 +194,8 @@ Follow any prompts. This will create a ServiceAccount and RBAC bindings for Argo
 
 The following example assumes:
 
-- You have a Git repository with example RSOT K8s manifests, and
+- You have a Git repository with example RSOT K8s manifests,
+- You want to use `HEAD` (no, not the bathroom on a ship), and
 - You want Argo CD to deploy them into a namespace in the *same* cluster.
 
 Create a file named `argo-demo-app.yaml`:
@@ -208,7 +209,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/tom-redis/argo-cd-lab.git
+    repoURL: https://github.com/Redis-ProfessionalService/argo-cd-lab.git
     targetRevision: HEAD
     path: k8s/simple-demo   # adjust to the actual path in your repo
   destination:
@@ -235,9 +236,15 @@ argocd app get argo-demo
 
 Or use the Web UI to visualize the Application tree, health, and sync status.
 
+## 9. Test your CD flow
+
+1. In your git repo, make a valid spec change in the REDB yaml file and commit it.
+Argo should detect the change and update the database.
+2. Change the REC yaml, and validate it is implemented.
+
 ---
 
-## 9. Cleanup
+## 10. Cleanup
 
 To remove Argo CD from the RSOT for K8s lab:
 
@@ -252,7 +259,7 @@ If you created any Argo-managed workloads (Applications, namespaces, etc.), dele
 
 ---
 
-## 10. Notes and best practices for RSOT for K8s
+## 11. Notes and best practices for RSOT for K8s
 
 - **Scope:** These steps are intended for **your own testing/dry runs**. For customer-facing RSOT deliveries, avoid modifying the shared lab image beyond the official exercises unless you explicitly need to demo Argo CD.
 - **Persistence:** RSOT labs are ephemeral. When the lab is torn down, any Argo CD state in the cluster is lost. Keep your manifests and configuration in Git so you can recreate Argo CD quickly in a fresh lab.
